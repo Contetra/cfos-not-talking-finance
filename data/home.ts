@@ -32,7 +32,7 @@ export const homeHero = {
 } as const;
 
 export const homeIntro = {
-  title: ["One conversation shubham.", "Many ways to be heard."],
+  title: ["One conversation.", "Many ways to be heard."],
   line: "One two-hour conversation becomes a full episode, sharp clips, and a story your clients can find any day of the week.",
 } as const;
 
