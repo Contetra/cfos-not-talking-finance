@@ -2,24 +2,12 @@ import { z } from "zod";
 
 /**
  * One source of truth for the guest application, shared by the form and the
- * route handler.
+ * Server Action.
  *
- * Two schemas are exported because a Date survives in memory but not over the
- * wire: the client validates real `Date` objects, the server validates the ISO
- * strings JSON turns them into. Every actual RULE is declared once — the field
- * definitions and the availability refinement are shared between them.
+ * Two schemas are exported: the client validates the fields a person fills
+ * in, and the server re-validates those same fields plus the two bot checks
+ * that never live in form state. Every actual RULE is declared once.
  */
-
-/** Longest availability window a guest may offer. */
-export const MAX_RANGE_DAYS = 60;
-
-const MS_PER_DAY = 86_400_000;
-
-function startOfToday(): Date {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
 
 /**
  * 8–15 digits once spaces, dashes, dots and brackets are stripped, with an
@@ -32,10 +20,10 @@ export function normalisePhone(input: string): string {
 }
 
 /* -------------------------------------------------------------------------
-   Field rules — declared once
+   Client schema — used by the react-hook-form resolver
 ------------------------------------------------------------------------- */
 
-const baseFields = {
+export const guestApplicationSchema = z.object({
   firstName: z
     .string("Enter your first name")
     .trim()
@@ -65,70 +53,16 @@ const baseFields = {
     ["yes", "no"],
     "Let us know whether you can travel to Mumbai",
   ),
-};
-
-/**
- * Both ends required, no past dates, in order, and no longer than 60 days.
- * Emits a single message so one control never shows a stack of errors.
- */
-function refineAvailability(
-  value: { from?: Date; to?: Date },
-  ctx: z.core.$RefinementCtx<{ from?: Date; to?: Date }>,
-) {
-  const { from, to } = value;
-
-  if (!from || !to) {
-    ctx.addIssue("Choose both a start and an end date.");
-    return;
-  }
-  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
-    ctx.addIssue("Those dates did not read correctly. Pick them again.");
-    return;
-  }
-  if (from < startOfToday()) {
-    ctx.addIssue("Start on today or a later date.");
-    return;
-  }
-  if (to < from) {
-    ctx.addIssue("The end date falls before the start date.");
-    return;
-  }
-  const spanDays = Math.round((to.getTime() - from.getTime()) / MS_PER_DAY) + 1;
-  if (spanDays > MAX_RANGE_DAYS) {
-    ctx.addIssue(`Keep the window to ${MAX_RANGE_DAYS} days or fewer.`);
-  }
-}
-
-/* -------------------------------------------------------------------------
-   Client schema — real Date objects, used by the react-hook-form resolver
-------------------------------------------------------------------------- */
-
-export const guestApplicationSchema = z.object({
-  ...baseFields,
-  availability: z
-    .object({
-      from: z.date().optional(),
-      to: z.date().optional(),
-    })
-    .superRefine(refineAvailability),
 });
 
 export type GuestApplicationValues = z.infer<typeof guestApplicationSchema>;
 
 /* -------------------------------------------------------------------------
-   Wire schema — what the route handler re-validates. Superset of the above:
-   same fields, dates coerced from ISO strings, plus the two bot checks.
+   Wire schema — what the Server Action re-validates. Superset of the above:
+   same fields, plus the two bot checks.
 ------------------------------------------------------------------------- */
 
-export const joinSubmissionSchema = z.object({
-  ...baseFields,
-  availability: z
-    .object({
-      from: z.coerce.date().optional(),
-      to: z.coerce.date().optional(),
-    })
-    .superRefine(refineAvailability),
-
+export const joinSubmissionSchema = guestApplicationSchema.extend({
   /** Honeypot. Visually hidden but not display:none, so bots fill it in. */
   website: z
     .string()
@@ -144,30 +78,3 @@ export const joinSubmissionSchema = z.object({
 });
 
 export type JoinSubmission = z.infer<typeof joinSubmissionSchema>;
-
-/* -------------------------------------------------------------------------
-   Display
-------------------------------------------------------------------------- */
-
-/**
- * "14 Oct – 22 Oct 2026", collapsing the year when both ends share one, so the
- * choice is confirmable without reopening the calendar.
- */
-export function formatDateRange(from?: Date, to?: Date): string | null {
-  if (!from) return null;
-
-  const day = new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-  });
-  const dayYear = new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
-  if (!to) return `${dayYear.format(from)} — pick an end date`;
-
-  const sameYear = from.getFullYear() === to.getFullYear();
-  return `${sameYear ? day.format(from) : dayYear.format(from)} – ${dayYear.format(to)}`;
-}

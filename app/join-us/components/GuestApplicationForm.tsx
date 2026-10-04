@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { joinPage } from "@/data/site";
 import { cn } from "@/lib/cn";
@@ -11,7 +11,6 @@ import {
   type GuestApplicationValues,
 } from "@/lib/joinSchema";
 import { submitGuestApplication } from "../actions";
-import AvailabilityRangePicker from "./AvailabilityRangePicker";
 import FormField, { inputClass } from "./FormField";
 import SubmissionSuccess from "./SubmissionSuccess";
 
@@ -23,7 +22,6 @@ const FIELD_ORDER = [
   "contactNumber",
   "email",
   "currentCity",
-  "availability",
   "travelToMumbai",
 ] as const;
 
@@ -44,7 +42,6 @@ export default function GuestApplicationForm() {
   const {
     register,
     handleSubmit,
-    control,
     setFocus,
     formState: { errors },
   } = useForm<GuestApplicationValues>({
@@ -58,7 +55,6 @@ export default function GuestApplicationForm() {
       contactNumber: "",
       email: "",
       currentCity: "",
-      availability: { from: undefined, to: undefined },
     },
   });
 
@@ -237,30 +233,6 @@ export default function GuestApplicationForm() {
                 aria-invalid={invalid || undefined}
                 aria-describedby={describedBy}
                 className={inputClass}
-              />
-            )}
-          </FormField>
-
-          <FormField
-            id="availability"
-            label={joinPage.labels.availability}
-            required
-            hint={joinPage.hints.availability}
-            error={errors.availability?.message}
-          >
-            {({ describedBy, invalid, labelId }) => (
-              <Controller
-                control={control}
-                name="availability"
-                render={({ field }) => (
-                  <AvailabilityRangePicker
-                    value={field.value}
-                    onChange={(range) => field.onChange(range ?? {})}
-                    invalid={invalid}
-                    describedBy={describedBy}
-                    labelledBy={labelId}
-                  />
-                )}
               />
             )}
           </FormField>

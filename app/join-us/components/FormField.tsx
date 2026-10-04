@@ -6,8 +6,7 @@ import { cn } from "@/lib/cn";
  * Underlined, not boxed: a 1px bottom rule that thickens to 2px and turns amber
  * on focus. Keeps the page reading as editorial rather than as a SaaS signup.
  *
- * Exported so every control on the page — inputs and the calendar's own
- * trigger — shares one treatment.
+ * Exported so every control on the page shares one treatment.
  */
 export const inputClass = cn(
   "w-full bg-transparent px-0 py-3 font-body text-copy text-primary",
@@ -26,7 +25,7 @@ type FormFieldProps = {
   hint?: string;
   className?: string;
   /** Render the control with the ids it must be wired to. `labelId` is for
-   *  composite controls (the calendar) where `htmlFor` cannot associate,
+   *  composite controls (a group of inputs) where `htmlFor` cannot associate,
    *  because the thing being labelled is a group rather than an input. */
   children: (ids: {
     describedBy?: string;
