@@ -1,0 +1,244 @@
+/*
+ * Hero card. Design origin: the card's top edge (y = 97 in the file); all
+ * y values below are measured from it. See home.module.css for --u.
+ */
+
+.hero {
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+}
+
+.inner {
+  /* The design leaves white above the card; the site header now sits there,
+     so this is just breathing room beneath it. */
+  padding-top: max(12px, calc(28 * var(--u)));
+}
+
+.cardWrap {
+  position: relative;
+}
+
+.card {
+  position: relative;
+  height: calc(717.4 * var(--u));
+  overflow: hidden;
+  background: var(--hp-navy);
+  border-radius: calc(111 * var(--u)) calc(128 * var(--u)) calc(108 * var(--u))
+    calc(106 * var(--u));
+}
+
+.pattern {
+  --pattern-color: rgb(247 157 0 / 0.14);
+}
+
+/* The 1440 composition, centred; the card itself runs full bleed. */
+.canvas {
+  position: relative;
+  width: calc(1440 * var(--u));
+  height: 100%;
+  margin-inline: auto;
+}
+
+.logo {
+  position: absolute;
+  left: calc(76 * var(--u));
+  top: calc(38 * var(--u));
+  width: calc(180 * var(--u));
+  height: auto;
+}
+
+.listen {
+  position: absolute;
+  left: calc(1130.6 * var(--u));
+  top: calc(78 * var(--u));
+  width: calc(238.3 * var(--u));
+  height: calc(39.5 * var(--u));
+  display: flex;
+  align-items: center;
+  /* The design sets the label at the right of the pill, not centred. */
+  justify-content: flex-end;
+  padding-right: calc(24 * var(--u));
+  border-radius: calc(9.9 * var(--u));
+  background: var(--hp-orange);
+  color: #fff;
+  font-family: var(--hp-font-corbel);
+  font-weight: 700;
+  font-size: calc(28.4 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.listen:hover {
+  background: var(--hp-orange-hover);
+}
+
+.listen:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Font size here is line one's; everything inside is in em of it. */
+.titleBlock {
+  position: absolute;
+  left: calc(352 * var(--u));
+  top: calc(246.5 * var(--u));
+  font-size: calc(130.2 * var(--u));
+}
+
+.title {
+  margin: 0;
+  font-family: var(--hp-font-hero);
+  font-weight: 900;
+  font-size: 1em;
+  color: #fff;
+}
+
+.line1,
+.line2 {
+  display: block;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.line2 {
+  font-size: 0.5806em;
+  margin-top: 0.136em;
+}
+
+.accent {
+  color: var(--hp-orange);
+}
+
+.struck {
+  position: relative;
+  display: inline-block;
+}
+
+/* The orange rule through "NOT" (x 780, y 407-415 in the design). */
+.struck::after {
+  content: "";
+  position: absolute;
+  left: 0.028em;
+  right: -0.02em;
+  top: 0.485em;
+  height: 0.065em;
+  background: var(--hp-orange);
+}
+
+.mic {
+  position: absolute;
+  left: 5.169em;
+  top: 0.403em;
+  width: 1.068em;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+}
+
+.byline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(500 * var(--u));
+  margin: 0;
+  /* Centred on x = 723, three pixels right of the card's centre. */
+  padding-left: calc(6 * var(--u));
+  text-align: center;
+  color: #fff;
+  font-family: var(--hp-font-corbel);
+  font-weight: 700;
+  font-size: calc(34.4 * var(--u));
+  line-height: 1;
+}
+
+.bracketStart,
+.bracketEnd {
+  position: absolute;
+  width: calc(58.6 * var(--u));
+  height: auto;
+  color: var(--hp-orange);
+  pointer-events: none;
+}
+
+.bracketStart {
+  left: 0;
+  top: calc(18.1 * var(--u));
+}
+
+.bracketEnd {
+  right: calc(11.9 * var(--u));
+  top: calc(573.8 * var(--u));
+}
+
+/* --- Phones: same pieces, stacked. --u here is one px of a 400-wide frame. */
+@media (max-width: 767.98px) {
+  .hero {
+    --u: min(1.4px, 100cqw / 400);
+  }
+
+  .inner {
+    padding-top: calc(10 * var(--u));
+  }
+
+  .card {
+    height: auto;
+    padding: calc(22 * var(--u)) calc(18 * var(--u)) calc(30 * var(--u));
+    border-radius: calc(36 * var(--u));
+  }
+
+  .canvas {
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    position: static;
+    width: calc(84 * var(--u));
+  }
+
+  .listen {
+    left: auto;
+    right: 0;
+    top: calc(6 * var(--u));
+    width: auto;
+    height: calc(32 * var(--u));
+    padding: 0 calc(14 * var(--u)) 0 calc(30 * var(--u));
+    border-radius: calc(8 * var(--u));
+    font-size: calc(15 * var(--u));
+  }
+
+  .titleBlock {
+    position: relative;
+    left: auto;
+    top: auto;
+    align-self: center;
+    margin-top: calc(26 * var(--u));
+    font-size: calc(56 * var(--u));
+  }
+
+  .byline {
+    position: static;
+    margin-top: calc(18 * var(--u));
+    padding-left: 0;
+    font-size: calc(16 * var(--u));
+  }
+
+  .bracketStart,
+  .bracketEnd {
+    width: calc(26 * var(--u));
+  }
+
+  .bracketStart {
+    top: calc(14 * var(--u));
+  }
+
+  .bracketEnd {
+    top: auto;
+    bottom: calc(12 * var(--u));
+    right: calc(5 * var(--u));
+  }
+}

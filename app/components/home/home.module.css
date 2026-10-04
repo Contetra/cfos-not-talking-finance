@@ -1,0 +1,65 @@
+/*
+ * Homepage scaffolding, shared by every section module.
+ *
+ * HOW THE MEASUREMENTS WORK
+ * The page is built from one 1440px-wide design. Each section is a size
+ * container and defines --u, one design pixel at the current width:
+ *
+ *   --u: min(1px, 100cqw / 1440)
+ *
+ * so it is exactly 1px at 1440 and wider, and shrinks in proportion below,
+ * keeping the composition intact. Every measurement is then written in design
+ * pixels, `calc(N * var(--u))`, usually as `(design-y - section-origin)` so it
+ * can be checked against the design file directly. Below the breakpoints each
+ * section redefines --u and switches to a stacked layout.
+ */
+
+.page {
+  /* Sampled from the design render, not the CMYK values in the file. */
+  --hp-navy: #221860;
+  --hp-indigo: #3c2b99;
+  --hp-orange: #f79d00;
+  --hp-orange-hover: #ffb02e;
+  --hp-yellow: #fdc900;
+
+  /* The design's own faces where the visitor has them, close stand-ins
+     where they do not. */
+  --hp-font-sans: Tahoma, Verdana, "Segoe UI", system-ui, sans-serif;
+  --hp-font-hand: var(--font-hand), "Segoe Print", "Comic Sans MS", cursive;
+  --hp-font-hero: var(--font-hero), "Arial Black", Impact, sans-serif;
+  --hp-font-corbel: Corbel, "Segoe UI", system-ui, sans-serif;
+  --hp-font-ui: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --hp-font-roboto: var(--font-roboto), Roboto, Arial, sans-serif;
+
+  background: #fff;
+  color: var(--hp-navy);
+  font-family: var(--hp-font-sans);
+  /* The swooshes run past both edges of the frame by design. */
+  overflow-x: clip;
+}
+
+/*
+ * The "Podcast" lettering texture. One seamless tile, used as a mask so each
+ * section can tint it: set --pattern-color on the element. 367 x 66.4 is the
+ * tile's size in the design.
+ */
+.pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-color: var(--pattern-color, rgb(247 157 0 / 0.1));
+  -webkit-mask-image: url("/home/podcast-pattern.png");
+  mask-image: url("/home/podcast-pattern.png");
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  -webkit-mask-size: calc(367 * var(--u)) calc(66.4 * var(--u));
+  mask-size: calc(367 * var(--u)) calc(66.4 * var(--u));
+}
+
+/* Kalam has no weight between 400 and 700; RelaxStudy sits between them. A
+   hairline stroke supplies the difference. */
+.hand {
+  font-family: var(--hp-font-hand);
+  font-weight: 400;
+  -webkit-text-stroke: 0.022em currentColor;
+}

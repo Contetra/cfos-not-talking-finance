@@ -1,0 +1,274 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   CFOs Not Talking Finance — design tokens.
+
+   Tailwind v4 is CSS-first: there is no tailwind.config.js. Everything
+   registered in @theme below becomes a utility automatically:
+     --color-primary  -> text-primary / bg-primary / border-primary
+     --font-display   -> font-display
+     --text-display   -> text-display (leading + tracking baked in)
+
+   THE CANVAS IS LIGHT. primary and accent are type, icon, rule and small-fill
+   colours — never large background fields. Target roughly 80% canvas/surface,
+   15% primary as type and elements, 5% accent.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Surfaces — these are the only colours allowed to cover large areas. */
+  --color-canvas: #ffffff;
+  --color-surface: #f5f4f8;
+  --color-line: #e4e2ec;
+
+  /* Ink */
+  --color-primary: #211654;
+  --color-body: #3a3552;
+  /* Brief specified #767390. That measures 4.54:1 on canvas but only 4.15:1 on
+     surface, and every caption in the reach band and the form card sits on
+     surface. Darkened four points to clear AA on BOTH grounds: 5.10:1 on
+     canvas, 4.65:1 on surface. Visually the same grey-violet. */
+  --color-muted: #6e6b88;
+
+  /* Accent — small surfaces only. #F49A00 on white is 2.0:1, so it may never
+     carry text below 18px. Use it as a fill with primary text on top, or as a
+     rule, dot, underline, ring or icon at size. */
+  --color-accent: #f49a00;
+  --color-accent-2: #ffc24d;
+
+  --color-error: #c2413a;
+
+  /* Type scale ----------------------------------------------------------- */
+  --text-display: clamp(2.75rem, 5.5vw, 5rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.03em;
+
+  --text-h2: clamp(2rem, 3.2vw, 3rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.02em;
+
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.25;
+  --text-h3--letter-spacing: -0.01em;
+
+  /* The About pull-quote. */
+  --text-quote: clamp(1.75rem, 2.6vw, 2.5rem);
+  --text-quote--line-height: 1.2;
+  --text-quote--letter-spacing: -0.015em;
+
+  /* The counter figures. */
+  --text-figure: clamp(2.5rem, 4vw, 3.5rem);
+  --text-figure--line-height: 1;
+  --text-figure--letter-spacing: -0.02em;
+
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.55;
+
+  /* NOTE: named `copy`, not `body`. Tailwind puts colours and font sizes in the
+     same `text-*` namespace, so --text-body and --color-body would both claim
+     `text-body` — the colour wins and the size is silently dropped. `text-copy`
+     is the body SIZE; `text-body` is the body COLOUR. */
+  --text-copy: 1.0625rem;
+  --text-copy--line-height: 1.65;
+
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.01em;
+}
+
+/* Font families use @theme inline so the utilities emit a var() reference
+   rather than a frozen value — next/font/local defines the variables on
+   <html> in the root layout, and inline lets the utility resolve there. */
+@theme inline {
+  --font-display: var(--font-cabinet-grotesk), ui-sans-serif, system-ui,
+    "Segoe UI", sans-serif;
+  --font-body: var(--font-switzer), ui-sans-serif, system-ui, "Segoe UI",
+    sans-serif;
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* One vertical rhythm for every section, with no exceptions. Used as
+   `class="section"` so the value lives in exactly one place. */
+.section {
+  padding-top: clamp(72px, 9vw, 140px);
+  padding-bottom: clamp(72px, 9vw, 140px);
+}
+
+/* The coming-soon waveform. Each bar carries its own resting height in --rest
+   and its own animation-delay, which is what makes the sweep travel. */
+@keyframes waveform {
+  0%,
+  100% {
+    transform: scaleY(var(--rest, 0.4));
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-primary);
+}
+
+/* Lenis owns the scroll position; these are the two rules it requires. Both
+   are inert when Lenis is not running. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* A global backstop only — components still branch on prefers-reduced-motion
+   in JS. This catches anything that slips through with a CSS transition. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

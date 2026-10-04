@@ -1,0 +1,236 @@
+/*
+ * "Our Host". Design origin: y = 2130 in the file.
+ *
+ * The bubble outline in the design is a 4.69px dotted stroke whose centre
+ * line runs along the path; the CSS border box below sits 2.35px outside
+ * that line so the dots land where they were drawn.
+ */
+
+.host {
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+}
+
+.canvas {
+  position: relative;
+  width: calc(1440 * var(--u));
+  margin-inline: auto;
+  padding: calc((2248.75 - 2130) * var(--u)) 0 calc((2770 - 2669.35) * var(--u));
+}
+
+/* --- Bubble --------------------------------------------------------------- */
+
+.bubble {
+  position: relative;
+  box-sizing: border-box;
+  width: calc(921.85 * var(--u));
+  min-height: calc(420.6 * var(--u));
+  margin-left: calc(115.95 * var(--u));
+  /* Right side is open: the portrait stands where it would be. */
+  padding: calc(44.9 * var(--u)) calc(150 * var(--u)) calc(38 * var(--u))
+    calc(102.4 * var(--u));
+  /* The design's dots are 4.7px squares; round dots need a little more
+     diameter to carry the same weight. */
+  border: calc(5.3 * var(--u)) dotted var(--hp-indigo);
+  border-right: 0;
+  border-radius: calc(94.65 * var(--u)) 0 0 calc(94.65 * var(--u)) /
+    calc(84.15 * var(--u)) 0 0 calc(84.15 * var(--u));
+}
+
+/* The top edge stops short of the bottom edge, as drawn (x = 958.7). */
+.bubble::after {
+  content: "";
+  position: absolute;
+  top: calc(-5.3 * var(--u));
+  left: calc(838.1 * var(--u));
+  right: 0;
+  height: calc(5.3 * var(--u) + 1px);
+  background: #fff;
+}
+
+.quoteMark {
+  position: absolute;
+  left: calc(17.1 * var(--u));
+  top: calc(-24.7 * var(--u));
+  width: calc(40.2 * var(--u));
+  height: auto;
+  color: var(--hp-orange);
+}
+
+.role {
+  margin: 0;
+  color: var(--hp-orange);
+  font-family: var(--hp-font-ui);
+  font-style: italic;
+  font-weight: 600;
+  font-size: calc(18.2 * var(--u));
+  line-height: calc(23.7 * var(--u));
+}
+
+.words {
+  margin: calc(14.2 * var(--u)) 0 0;
+  color: var(--hp-navy);
+  font-family: var(--hp-font-sans);
+  font-size: calc(19.4 * var(--u));
+  line-height: calc(24.4 * var(--u));
+}
+
+/* Measures that reproduce the design's line breaks; its second paragraph
+   was set in a narrower box than the other two. */
+.words p {
+  max-width: calc(627 * var(--u));
+  margin: 0;
+}
+
+.words p:nth-child(2) {
+  max-width: calc(592 * var(--u));
+}
+
+.words p + p {
+  margin-top: calc(9.6 * var(--u));
+}
+
+.tail {
+  position: absolute;
+  left: calc(694.36 * var(--u));
+  bottom: calc(-75.34 * var(--u));
+  width: calc(150 * var(--u));
+  height: calc(80 * var(--u));
+  color: var(--hp-indigo);
+  overflow: visible;
+}
+
+/* --- Portrait ------------------------------------------------------------- */
+
+/* A frame of its own (x 905-1315, y 2165-2672), so it can move as one. */
+.portrait {
+  position: absolute;
+  left: calc(905 * var(--u));
+  top: calc((2165 - 2130) * var(--u));
+  width: calc(410 * var(--u));
+  height: calc(507 * var(--u));
+}
+
+.label {
+  position: absolute;
+  left: calc(294 * var(--u));
+  top: calc(62 * var(--u));
+  z-index: 1;
+  margin: 0;
+  transform: translate(-50%, -50%) rotate(23deg);
+  color: var(--hp-indigo);
+  font-size: calc(41 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.capsule {
+  position: absolute;
+  left: calc(38.8 * var(--u));
+  top: calc(60.7 * var(--u));
+  width: calc(360.9 * var(--u));
+  height: calc(442.5 * var(--u));
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--hp-indigo);
+  isolation: isolate;
+}
+
+.capsule > .pattern {
+  --pattern-color: rgb(247 157 0 / 0.17);
+}
+
+.photo {
+  position: absolute;
+  left: calc(34.5 * var(--u));
+  top: calc(81 * var(--u));
+  width: calc(313.7 * var(--u));
+  max-width: none;
+  height: auto;
+}
+
+.tags {
+  position: absolute;
+  left: calc(14 * var(--u));
+  top: calc(350.2 * var(--u));
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(6.5 * var(--u));
+  margin: 0;
+}
+
+.tag {
+  display: block;
+  height: calc(42.3 * var(--u));
+  padding: 0 calc(17 * var(--u)) 0 calc(15 * var(--u));
+  border-radius: calc(7.9 * var(--u));
+  background: var(--hp-orange);
+  color: #fff;
+  font-family: var(--hp-font-ui);
+  font-weight: 700;
+  font-size: calc(34 * var(--u));
+  line-height: calc(42.3 * var(--u));
+  white-space: nowrap;
+}
+
+/* --- Tablets and phones: portrait above, bubble closed below. ------------- */
+
+@media (max-width: 1023.98px) {
+  .host {
+    --u: min(1px, (100cqw - 40px) / 410);
+  }
+
+  .canvas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 40px 20px 56px;
+  }
+
+  .portrait {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin-bottom: 32px;
+  }
+
+  .bubble {
+    width: 100%;
+    max-width: 720px;
+    min-height: 0;
+    margin: 0;
+    padding: calc(56 * var(--u)) calc(28 * var(--u)) calc(40 * var(--u))
+      calc(36 * var(--u));
+    border-right: calc(5.3 * var(--u)) dotted var(--hp-indigo);
+    border-radius: calc(60 * var(--u));
+  }
+
+  .bubble::after,
+  .tail {
+    display: none;
+  }
+
+  /* Smaller, and clear of the first line, on a narrow bubble. */
+  .quoteMark {
+    top: calc(-20 * var(--u));
+    width: calc(26 * var(--u));
+  }
+
+  .role {
+    font-size: max(15px, calc(18.2 * var(--u)));
+    line-height: 1.3;
+  }
+
+  .words {
+    font-size: max(16px, calc(19.4 * var(--u)));
+    line-height: 1.4;
+  }
+
+  .words p,
+  .words p:nth-child(2) {
+    max-width: none;
+  }
+}

@@ -1,0 +1,130 @@
+/*
+ * "Curated by" / "Production Team". Design origin: y = 3420 in the file.
+ * Each group is a frame of its own; positions inside come from LAYOUT.
+ */
+
+.team {
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+}
+
+.canvas {
+  position: relative;
+  width: calc(1440 * var(--u));
+  height: calc(840 * var(--u));
+  margin-inline: auto;
+  margin-bottom: calc(60 * var(--u));
+}
+
+.swoosh {
+  position: absolute;
+  left: calc(-95 * var(--u));
+  top: calc((3870 - 3420) * var(--u));
+  width: calc(1705 * var(--u));
+  height: auto;
+  pointer-events: none;
+}
+
+.group {
+  position: absolute;
+  left: calc(var(--gx) * var(--u));
+  top: calc(var(--gy) * var(--u));
+  width: calc(var(--gw) * var(--u));
+  height: calc(var(--gh) * var(--u));
+}
+
+.label {
+  position: absolute;
+  left: calc(var(--lx) * var(--u));
+  top: calc(var(--ly) * var(--u));
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--hp-navy);
+  font-size: calc(39.5 * var(--u));
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Drawn over the capsules: the heads land inside them, as in the design. */
+.arrows {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  color: var(--hp-navy);
+  pointer-events: none;
+}
+
+.members {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capsule {
+  position: absolute;
+  left: calc(var(--px) * var(--u));
+  top: calc(var(--py) * var(--u));
+  z-index: var(--z);
+  width: calc(var(--pw) * var(--u));
+  height: calc(var(--ph) * var(--u));
+  overflow: hidden;
+  border-radius: 9999px;
+}
+
+.yellow {
+  background: var(--hp-yellow);
+}
+
+.orange {
+  background: var(--hp-orange);
+}
+
+.photo {
+  position: absolute;
+  bottom: 0;
+  left: calc(var(--fx) * var(--u));
+  width: calc(var(--fw) * var(--u));
+  max-width: none;
+  height: auto;
+}
+
+.name {
+  position: absolute;
+  left: calc(var(--nx) * var(--u));
+  top: calc(var(--ny) * var(--u));
+  z-index: 5;
+  margin: 0;
+  transform: translate(-50%, -50%) rotate(var(--nr));
+  color: var(--hp-navy);
+  font-size: calc(26 * var(--u));
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* --- Tablets and phones: groups stack, each scaled to fit. ---------------- */
+
+@media (max-width: 1023.98px) {
+  .canvas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0;
+    padding: 24px 0 64px;
+  }
+
+  .swoosh {
+    display: none;
+  }
+
+  .group {
+    --u: min(1px, (100cqw - 32px) / var(--gw));
+    position: relative;
+    left: auto;
+    top: auto;
+  }
+}

@@ -1,0 +1,191 @@
+/*
+ * "A show for finance leaders…". Design origin: y = 2770 in the file.
+ * Two columns: heading + yellow bubble (x 178-760), orange bubble + note
+ * (x 829-1345). Bubbles grow with their text; the tails are drawn as SVG.
+ */
+
+.about {
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+}
+
+.canvas {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  width: calc(1440 * var(--u));
+  margin-inline: auto;
+  padding-bottom: calc((3420 - 3304.6) * var(--u));
+}
+
+.swooshStart,
+.swooshEnd {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+}
+
+.swooshStart {
+  left: calc(-20 * var(--u));
+  top: calc((2800 - 2770) * var(--u));
+  width: calc(525 * var(--u));
+}
+
+.swooshEnd {
+  left: calc(975 * var(--u));
+  top: calc((3060 - 2770) * var(--u));
+  width: calc(520 * var(--u));
+}
+
+.colStart,
+.colEnd {
+  position: relative;
+}
+
+.colStart {
+  width: calc(582.3 * var(--u));
+  margin-left: calc(178 * var(--u));
+  padding-top: calc((2832.5 - 2770) * var(--u));
+}
+
+.colEnd {
+  width: calc(516.5 * var(--u));
+  margin-left: calc(68.4 * var(--u));
+  padding-top: calc((2830.3 - 2770) * var(--u));
+}
+
+/* Wider than its column, as drawn: "where the one thing we never" overhangs. */
+.title {
+  width: calc(615 * var(--u));
+  margin: 0;
+  color: var(--hp-navy);
+  font-family: var(--hp-font-sans);
+  font-weight: 700;
+  font-size: calc(39.5 * var(--u));
+  line-height: calc(45 * var(--u));
+}
+
+.bubble {
+  position: relative;
+  font-family: var(--hp-font-sans);
+  font-size: calc(21.9 * var(--u));
+  line-height: calc(27.8 * var(--u));
+}
+
+.bubble p {
+  margin: 0;
+}
+
+.storyPart {
+  display: block;
+}
+
+.sun {
+  min-height: calc(249 * var(--u));
+  margin-top: calc((3055.6 - 2967.5) * var(--u));
+  /* Measure set so the six lines break where the design breaks them. */
+  padding: calc(41.7 * var(--u)) calc(38.4 * var(--u)) calc(40.6 * var(--u))
+    calc(47.9 * var(--u));
+  border-radius: calc(50 * var(--u)) / calc(46 * var(--u));
+  background: var(--hp-yellow);
+  color: var(--hp-navy);
+}
+
+/* White on this orange is the design's choice; see the handover notes on
+   contrast. */
+.orange {
+  min-height: calc(249.1 * var(--u));
+  padding: calc(36 * var(--u)) calc(18 * var(--u)) calc(46.3 * var(--u))
+    calc(45.2 * var(--u));
+  border-radius: calc(47 * var(--u));
+  background: var(--hp-orange);
+  color: #fff;
+}
+
+.tailUp,
+.tailSide {
+  position: absolute;
+  height: auto;
+}
+
+.tailUp {
+  left: calc(381 * var(--u));
+  top: calc(-44.9 * var(--u));
+  width: calc(69.7 * var(--u));
+  color: var(--hp-yellow);
+}
+
+.tailSide {
+  left: calc(-60.9 * var(--u));
+  top: calc(110.8 * var(--u));
+  width: calc(62 * var(--u));
+  color: var(--hp-orange);
+}
+
+.note {
+  margin: calc((3158 - 3079.4) * var(--u)) 0 0 calc(31.2 * var(--u));
+  color: var(--hp-navy);
+  font-size: calc(26.2 * var(--u));
+  line-height: calc(34 * var(--u));
+}
+
+.noteLine {
+  display: block;
+}
+
+/* --- Tablets and phones: one column. ------------------------------------- */
+
+@media (max-width: 1023.98px) {
+  .about {
+    --u: clamp(0.78px, (100cqw - 40px) / 560, 1px);
+  }
+
+  .canvas {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 40px 20px 56px;
+  }
+
+  .swooshStart,
+  .swooshEnd,
+  .tailSide {
+    display: none;
+  }
+
+  .colStart,
+  .colEnd {
+    width: 100%;
+    max-width: 640px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .colEnd {
+    margin-top: 28px;
+  }
+
+  .title {
+    width: auto;
+  }
+
+  .sun {
+    min-height: 0;
+    margin-top: calc(72 * var(--u));
+  }
+
+  /* Under the heading it answers, not out at the far edge. */
+  .tailUp {
+    left: calc(64 * var(--u));
+  }
+
+  .orange {
+    min-height: 0;
+  }
+
+  .note {
+    margin: 28px 0 0 8px;
+    font-size: calc(23 * var(--u));
+    line-height: 1.35;
+  }
+}

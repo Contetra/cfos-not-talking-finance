@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  APP_DIR: /home/deploy/apps/contetra-cfos-not-talking-finance
+  PM2_NAME: contetra-cfos-not-talking-finance
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Package source
+        run: tar --exclude=node_modules --exclude=.git -czf release.tgz .
+
+      - name: Upload to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          username: deploy
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          source: release.tgz
+          target: ${{ env.APP_DIR }}/incoming/
+
+      - name: Build and switch release
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          username: deploy
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          script: |
+            set -e
+            RELEASE=${{ env.APP_DIR }}/releases/$(date +%Y%m%d%H%M%S)
+            mkdir -p "$RELEASE"
+            tar -xzf ${{ env.APP_DIR }}/incoming/release.tgz -C "$RELEASE"
+            rm ${{ env.APP_DIR }}/incoming/release.tgz
+            cd "$RELEASE"
+            npm ci
+            npm run build
+            ln -sfn "$RELEASE" ${{ env.APP_DIR }}/current
+            pm2 reload ${{ env.PM2_NAME }} || pm2 start ${{ env.APP_DIR }}/current/deploy/ecosystem.config.js --only ${{ env.PM2_NAME }}
+            pm2 save
+            ls -1dt ${{ env.APP_DIR }}/releases/* | tail -n +6 | xargs -r rm -rf
