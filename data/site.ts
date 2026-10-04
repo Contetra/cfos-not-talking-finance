@@ -124,7 +124,7 @@ export const joinCta = {
 /** The Join us page. */
 export const joinPage = {
   title: "Be a guest on the show",
-  line: "Tell us when you are free. We will take it from there.",
+  line: "Tell us a little about yourself. We will take it from there.",
   scrollCue: "Apply to be a guest",
   requiredLegend: "Fields marked with an asterisk are required.",
   submit: "Send application",
@@ -135,12 +135,10 @@ export const joinPage = {
     contactNumber: "Contact number",
     email: "Email",
     currentCity: "Current city",
-    availability: "When are you available?",
     travelToMumbai: "Can you travel to the Mumbai studio?",
   },
   hints: {
     contactNumber: "Include your country code if you are outside India.",
-    availability: `Pick a start and an end date, up to 60 days apart.`,
   },
   success: {
     title: "Application received",

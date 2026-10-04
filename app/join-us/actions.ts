@@ -121,8 +121,6 @@ export async function submitGuestApplication(
   console.info("[join] application received", {
     name: `${application.firstName} ${application.lastName}`,
     city: application.currentCity || "—",
-    from: application.availability.from?.toISOString(),
-    to: application.availability.to?.toISOString(),
     travelToMumbai: application.travelToMumbai,
     // Redacted in production; full values only ever in local development.
     email: isProduction
@@ -155,7 +153,6 @@ export async function submitGuestApplication(
   //       `Email: ${application.email}`,
   //       `Phone: ${application.contactNumber}`,
   //       `City: ${application.currentCity || "—"}`,
-  //       `Available: ${application.availability.from?.toDateString()} to ${application.availability.to?.toDateString()}`,
   //       `Can travel to Mumbai: ${application.travelToMumbai}`,
   //     ].join("\n"),
   //   }),
@@ -180,7 +177,7 @@ export async function submitGuestApplication(
   // const sheets = google.sheets({ version: "v4", auth });
   // await sheets.spreadsheets.values.append({
   //   spreadsheetId: process.env.GOOGLE_SHEETS_ID,
-  //   range: "Applications!A:H",
+  //   range: "Applications!A:G",
   //   valueInputOption: "USER_ENTERED",
   //   requestBody: {
   //     values: [[
@@ -190,7 +187,6 @@ export async function submitGuestApplication(
   //       application.email,
   //       application.contactNumber,
   //       application.currentCity ?? "",
-  //       `${application.availability.from?.toISOString()} → ${application.availability.to?.toISOString()}`,
   //       application.travelToMumbai,
   //     ]],
   //   },
