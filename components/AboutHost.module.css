@@ -1,0 +1,183 @@
+.section {
+  padding: 72px 22px 8px;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  max-width: 1080px;
+  margin-inline: auto;
+}
+
+/* --- Portrait ------------------------------------------------------------ */
+
+.portrait {
+  position: relative;
+  flex: 0 0 auto;
+  width: 280px;
+  height: 340px;
+  z-index: 1;
+}
+
+.capsule {
+  position: absolute;
+  inset: 0 10px 0 20px;
+  --u: 0.62px;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 9999px;
+  background: var(--hp-indigo);
+}
+
+.capsule > .pattern {
+  --pattern-color: rgb(247 157 0 / 0.17);
+}
+
+.photo {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 88%;
+  max-width: none;
+  height: auto;
+  transform: translateX(-50%);
+}
+
+.tags {
+  position: absolute;
+  left: 0;
+  bottom: 26px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+}
+
+.tag {
+  display: block;
+  padding: 3px 12px 4px;
+  border-radius: 6px;
+  background: var(--hp-orange);
+  color: #fff;
+  font-family: var(--hp-font-ui);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* --- Bubble -------------------------------------------------------------- */
+
+.bubble {
+  position: relative;
+  flex: 1;
+  margin-left: -44px;
+  padding: 40px 72px 44px 92px;
+  border: 5px dotted var(--hp-indigo);
+  border-left: 0;
+  border-radius: 0 56px 56px 0;
+  color: var(--hp-navy);
+}
+
+.title {
+  margin: 0;
+  color: var(--hp-orange);
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.text {
+  max-width: 56ch;
+  margin: 10px 0 0;
+  color: var(--hp-ink);
+  font-family: var(--hp-font-roboto);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hello {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 18px;
+  padding: 10px 26px;
+  border-radius: 9999px;
+  background: var(--hp-orange);
+  /* Navy, as on "Be Our Guest": white on #f79d00 is only 2.2:1. */
+  color: var(--hp-navy);
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.hello:hover {
+  background: var(--hp-orange-hover);
+}
+
+.hello:focus-visible {
+  outline: 2px solid var(--hp-navy);
+  outline-offset: 3px;
+}
+
+.quote {
+  position: absolute;
+  right: -22px;
+  bottom: 24px;
+  width: 30px;
+  height: auto;
+  color: var(--hp-orange);
+}
+
+.tail {
+  position: absolute;
+  left: 120px;
+  bottom: -64px;
+  width: 120px;
+  height: 70px;
+  color: var(--hp-indigo);
+  overflow: visible;
+}
+
+/* --- Phones: portrait above, bubble closed below. ------------------------ */
+
+@media (max-width: 767.98px) {
+  .section {
+    padding-top: 48px;
+  }
+
+  .inner {
+    flex-direction: column;
+  }
+
+  .portrait {
+    width: 240px;
+    height: 292px;
+  }
+
+  .tag {
+    font-size: 19px;
+  }
+
+  .bubble {
+    width: 100%;
+    margin: 24px 0 0;
+    padding: 30px 26px 32px;
+    border-left: 5px dotted var(--hp-indigo);
+    border-radius: 36px;
+  }
+
+  .tail {
+    display: none;
+  }
+
+  .quote {
+    right: -14px;
+    width: 22px;
+  }
+}

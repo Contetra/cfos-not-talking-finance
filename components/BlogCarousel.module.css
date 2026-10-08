@@ -1,0 +1,154 @@
+/* Measured from the Podcast design (1440 frame, --u). */
+
+.section {
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+  padding-top: calc(70 * var(--u));
+}
+
+.inner {
+  width: calc(1440 * var(--u));
+  margin-inline: auto;
+  padding: 0 calc(97 * var(--u));
+}
+
+.title {
+  margin: 0 0 calc(28 * var(--u)) calc(82 * var(--u));
+  color: var(--hp-navy);
+  font-family: var(--hp-font-sans);
+  font-weight: 700;
+  font-size: max(24px, calc(36 * var(--u)));
+  line-height: 1.15;
+}
+
+.rail {
+  position: relative;
+  padding: 0 calc(82 * var(--u));
+}
+
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 2 * var(--gap)) / 3);
+  --gap: calc(20 * var(--u));
+  column-gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  scroll-snap-align: start;
+}
+
+.card {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--hp-navy);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--hp-orange);
+  outline-offset: -3px;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover .image {
+  transform: scale(1.03);
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max(36px, calc(56 * var(--u)));
+  height: max(36px, calc(56 * var(--u)));
+  border: 0;
+  border-radius: 9999px;
+  background: var(--hp-orange);
+  color: #fff;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.arrow[hidden] {
+  display: none;
+}
+
+.arrow svg {
+  width: 55%;
+  height: 55%;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--hp-orange-hover);
+}
+
+.arrow:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.arrow:focus-visible {
+  outline: 2px solid var(--hp-navy);
+  outline-offset: 3px;
+}
+
+.arrowPrev {
+  left: 0;
+  transform: translate(-30%, -50%);
+}
+
+.arrowNext {
+  right: 0;
+  transform: translate(30%, -50%);
+}
+
+@media (max-width: 767.98px) {
+  .section {
+    padding-top: 48px;
+  }
+
+  .inner {
+    width: auto;
+    padding: 0 22px;
+  }
+
+  .title {
+    margin: 0 0 18px;
+  }
+
+  .rail {
+    padding: 0;
+  }
+
+  .track {
+    grid-auto-columns: 82%;
+    --gap: 14px;
+  }
+
+  .arrow {
+    display: none;
+  }
+}

@@ -9,9 +9,9 @@
 }
 
 .inner {
-  /* The design leaves white above the card; the site header now sits there,
-     so this is just breathing room beneath it. */
-  padding-top: max(12px, calc(28 * var(--u)));
+  /* The same 12px every hero leaves above its card; the site header's
+     positions are measured from it (SiteHeader.module.css). */
+  padding-top: 12px;
 }
 
 .cardWrap {
@@ -39,45 +39,8 @@
   margin-inline: auto;
 }
 
-.logo {
-  position: absolute;
-  left: calc(76 * var(--u));
-  top: calc(38 * var(--u));
-  width: calc(180 * var(--u));
-  height: auto;
-}
-
-.listen {
-  position: absolute;
-  left: calc(1130.6 * var(--u));
-  top: calc(78 * var(--u));
-  width: calc(238.3 * var(--u));
-  height: calc(39.5 * var(--u));
-  display: flex;
-  align-items: center;
-  /* The design sets the label at the right of the pill, not centred. */
-  justify-content: flex-end;
-  padding-right: calc(24 * var(--u));
-  border-radius: calc(9.9 * var(--u));
-  background: var(--hp-orange);
-  color: #fff;
-  font-family: var(--hp-font-corbel);
-  font-weight: 700;
-  font-size: calc(28.4 * var(--u));
-  line-height: 1;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-
-.listen:hover {
-  background: var(--hp-orange-hover);
-}
-
-.listen:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-}
+/* The logo (left) and navigation (right) that the design draws at the top of
+   this card come from the site header, laid over it. */
 
 /* Font size here is line one's; everything inside is in em of it. */
 .titleBlock {
@@ -178,13 +141,10 @@
     --u: min(1.4px, 100cqw / 400);
   }
 
-  .inner {
-    padding-top: calc(10 * var(--u));
-  }
-
   .card {
     height: auto;
-    padding: calc(22 * var(--u)) calc(18 * var(--u)) calc(30 * var(--u));
+    /* Clear of the header's logo and menu button. */
+    padding: 100px calc(18 * var(--u)) calc(30 * var(--u));
     border-radius: calc(36 * var(--u));
   }
 
@@ -195,28 +155,12 @@
     flex-direction: column;
   }
 
-  .logo {
-    position: static;
-    width: calc(84 * var(--u));
-  }
-
-  .listen {
-    left: auto;
-    right: 0;
-    top: calc(6 * var(--u));
-    width: auto;
-    height: calc(32 * var(--u));
-    padding: 0 calc(14 * var(--u)) 0 calc(30 * var(--u));
-    border-radius: calc(8 * var(--u));
-    font-size: calc(15 * var(--u));
-  }
-
   .titleBlock {
     position: relative;
     left: auto;
     top: auto;
     align-self: center;
-    margin-top: calc(26 * var(--u));
+    margin-top: 0;
     font-size: calc(56 * var(--u));
   }
 

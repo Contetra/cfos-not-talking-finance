@@ -2,14 +2,22 @@
 
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { createPortal } from "react-dom";
 
 import { joinCta, routes, site } from "@/data/site";
 import { cn } from "@/lib/cn";
-import { BTN_ACCENT, TRANSITION } from "@/lib/ui";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { getLenis } from "./SmoothScrollProvider";
 import { SocialMark } from "./SocialMarks";
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -22,33 +30,51 @@ const FOCUSABLE =
 
 const DESKTOP_QUERY = "(min-width: 1024px)";
 
-function isActive(pathname: string, href: string) {
-  // "/" prefixes every route, so home only matches exactly.
-  if (href === routes.home) {
-    return pathname === routes.home;
-  }
-  return pathname === href || pathname.startsWith(`${href}/`);
+/** True on the client, false while rendering on the server. */
+const noopSubscribe = () => () => {};
+function useIsClient() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
 }
 
-export default function MobileMenu() {
+type MobileMenuProps = {
+  isActive: (href: string) => boolean;
+  triggerClassName?: string;
+};
+
+/**
+ * The full-screen menu below desktop widths.
+ *
+ * The panel is portalled to <body>. The header it is opened from is a size
+ * container, and a size container is the containing block for anything
+ * position: fixed inside it, so an in-place panel would be pinned to the
+ * header rather than the viewport. The panel therefore carries its own logo
+ * and close button.
+ */
+export default function MobileMenu({ isActive, triggerClassName }: MobileMenuProps) {
   const pathname = usePathname();
   const reducedMotion = useReducedMotion();
+  const isClient = useIsClient();
   const panelId = useId();
 
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const firstLinkRef = useRef<HTMLAnchorElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
 
-  // Close whenever the route changes — the overlay covers the page it just
-  // navigated to otherwise.
-  useEffect(() => {
+  // Close whenever the route changes, by comparing during render rather than
+  // in an effect, so the stale overlay never paints over the new page.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
     setOpen(false);
-  }, [pathname]);
+  }
 
-  // Hand focus back to the trigger on close, but only if we were the ones who
-  // took it away.
+  // Hand focus back to the trigger on close, but only if we took it away.
   useEffect(() => {
     if (wasOpen.current && !open) {
       triggerRef.current?.focus();
@@ -56,14 +82,17 @@ export default function MobileMenu() {
     wasOpen.current = open;
   }, [open]);
 
-  // Lock the page behind the overlay, remembering whatever was there before.
+  // Lock the page behind the overlay: both the native scroll and Lenis.
   useEffect(() => {
     if (!open) return;
     const body = document.body;
     const previousOverflow = body.style.overflow;
     body.style.overflow = "hidden";
+    const lenis = getLenis();
+    lenis?.stop();
     return () => {
       body.style.overflow = previousOverflow;
+      lenis?.start();
     };
   }, [open]);
 
@@ -71,12 +100,12 @@ export default function MobileMenu() {
   useEffect(() => {
     if (!open) return;
     const frame = window.requestAnimationFrame(() => {
-      firstLinkRef.current?.focus();
+      closeRef.current?.focus();
     });
     return () => window.cancelAnimationFrame(frame);
   }, [open]);
 
-  // Escape closes; Tab cycles between the trigger and everything in the panel.
+  // Escape closes; Tab cycles within the panel.
   useEffect(() => {
     if (!open) return;
 
@@ -90,10 +119,7 @@ export default function MobileMenu() {
 
       const panel = panelRef.current;
       if (!panel) return;
-
-      const nodes: HTMLElement[] = [];
-      if (triggerRef.current) nodes.push(triggerRef.current);
-      nodes.push(...Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)));
+      const nodes = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
       if (nodes.length === 0) return;
 
       const first = nodes[0];
@@ -110,7 +136,7 @@ export default function MobileMenu() {
         }
         return;
       }
-      if (active === last) {
+      if (active === last || !active || !nodes.includes(active)) {
         event.preventDefault();
         first.focus();
       }
@@ -120,159 +146,134 @@ export default function MobileMenu() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  // If the viewport grows past the breakpoint the overlay is hidden by CSS, so
-  // drop the open state with it rather than leaving the body locked.
+  // If the viewport grows past the breakpoint the trigger disappears, so drop
+  // the open state with it rather than leaving the page locked.
   useEffect(() => {
     if (!open || typeof window.matchMedia !== "function") return;
     const mql = window.matchMedia(DESKTOP_QUERY);
     const onChange = () => {
       if (mql.matches) setOpen(false);
     };
-    onChange();
     mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
   }, [open]);
 
+  const items = [...site.nav, { label: joinCta.button, href: joinCta.href }];
+
+  const panel = (
+    <AnimatePresence>
+      {open ? (
+        <motion.div
+          id={panelId}
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          data-lenis-prevent
+          initial={reducedMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: reducedMotion ? 1 : 0 }}
+          transition={{ duration: reducedMotion ? 0 : 0.28, ease: EASE }}
+          className="fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-[var(--hp-navy)] text-white"
+        >
+          <div className="flex items-start justify-between px-[18px] pt-[26px]">
+            <Link href={routes.home} onClick={() => setOpen(false)} className="block w-[84px]">
+              <Image
+                src={site.logoInverse}
+                alt={`${site.name}, home`}
+                width={892}
+                height={818}
+                sizes="84px"
+                className="h-auto w-full"
+              />
+            </Link>
+            <button
+              ref={closeRef}
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="inline-flex size-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
+            >
+              <X className="size-6" strokeWidth={1.8} aria-hidden="true" />
+            </button>
+          </div>
+
+          <nav aria-label="Primary" className="flex flex-1 flex-col justify-center px-6 pb-10 md:px-10">
+            <ul className="flex flex-col gap-2">
+              {items.map((item, index) => {
+                const active = isActive(item.href);
+                const isCta = item.href === joinCta.href;
+                return (
+                  <motion.li
+                    key={item.href}
+                    initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: reducedMotion ? 0 : 0.32,
+                      ease: EASE,
+                      delay: reducedMotion ? 0 : 0.08 + index * STAGGER,
+                    }}
+                  >
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "inline-flex py-2 font-[family-name:var(--hp-font-hero)] text-[2.25rem] leading-tight transition-colors",
+                        isCta
+                          ? "mt-6 rounded-full bg-[var(--hp-orange)] px-7 py-3 text-[1.25rem] text-[var(--hp-navy)] hover:bg-[var(--hp-orange-hover)]"
+                          : "text-white hover:text-[var(--hp-yellow)]",
+                        active && !isCta && "underline decoration-[var(--hp-orange)] decoration-2 underline-offset-8",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="border-t border-white/15 px-6 py-6 md:px-10">
+            <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              {site.socials.map((social) => (
+                <li key={social.platform}>
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-[0.875rem] text-white/80 transition-colors hover:text-white"
+                  >
+                    <SocialMark platform={social.platform} className="size-5 shrink-0" />
+                    {social.name}
+                    <span className="sr-only">(opens in a new tab)</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+
   return (
-    <div className="lg:hidden">
+    <>
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setOpen((value) => !value)}
-        aria-label={open ? "Close menu" : "Open menu"}
+        onClick={() => setOpen(true)}
+        aria-label="Open menu"
         aria-expanded={open}
-        aria-controls={panelId}
+        aria-controls={open ? panelId : undefined}
         className={cn(
-          "text-primary hover:bg-surface relative z-50 -mr-2 inline-flex size-11 items-center justify-center rounded-full",
-          TRANSITION,
+          "size-10 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10",
+          triggerClassName,
         )}
       >
-        {open ? (
-          <X className="size-6" strokeWidth={1.6} aria-hidden="true" />
-        ) : (
-          <Menu className="size-6" strokeWidth={1.6} aria-hidden="true" />
-        )}
+        <Menu className="size-6" strokeWidth={1.8} aria-hidden="true" />
       </button>
-
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            id={panelId}
-            ref={panelRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={site.name}
-            data-lenis-prevent
-            initial={reducedMotion ? false : { x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: reducedMotion ? 0 : "100%" }}
-            transition={{ duration: reducedMotion ? 0 : 0.42, ease: EASE }}
-            className="bg-canvas fixed inset-0 z-40 flex flex-col overflow-y-auto"
-          >
-            <nav
-              aria-label="Primary"
-              className="flex flex-1 flex-col justify-center px-6 pt-28 pb-10 md:px-10"
-            >
-              <ul className="flex flex-col gap-1">
-                {site.nav.map((item, index) => {
-                  const active = isActive(pathname, item.href);
-
-                  return (
-                    <motion.li
-                      key={item.href}
-                      initial={reducedMotion ? false : { opacity: 0, x: 28 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        duration: reducedMotion ? 0 : 0.34,
-                        ease: EASE,
-                        delay: reducedMotion ? 0 : 0.12 + index * STAGGER,
-                      }}
-                    >
-                      <Link
-                        ref={index === 0 ? firstLinkRef : undefined}
-                        href={item.href}
-                        aria-current={active ? "page" : undefined}
-                        onClick={() => setOpen(false)}
-                        className={cn(
-                          "font-display text-h2 inline-flex items-start gap-2 py-2 font-bold",
-                          TRANSITION,
-                          active ? "text-primary" : "text-body hover:text-primary",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "border-b-2 pb-1",
-                            active ? "border-accent" : "border-transparent",
-                          )}
-                        >
-                          {item.label}
-                        </span>
-                        {item.comingSoon ? (
-                          <>
-                            <span
-                              aria-hidden="true"
-                              className="bg-accent mt-2 block size-[5px] shrink-0 rounded-full"
-                            />
-                            <span className="sr-only"> (coming soon)</span>
-                          </>
-                        ) : null}
-                      </Link>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-
-              {/* The header CTA is hidden on the narrowest screens, so the menu
-                  carries it instead — the conversion is never more than one tap
-                  away. */}
-              <Link
-                href={joinCta.href}
-                onClick={() => setOpen(false)}
-                className={cn(BTN_ACCENT, "mt-10 w-full")}
-              >
-                {joinCta.button}
-              </Link>
-            </nav>
-
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{
-                duration: reducedMotion ? 0 : 0.34,
-                ease: EASE,
-                delay: reducedMotion ? 0 : 0.12 + site.nav.length * STAGGER,
-              }}
-              className="border-line border-t px-6 py-6 md:px-10"
-            >
-              <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                {site.socials.map((social) => (
-                  <li key={social.platform}>
-                    <a
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn(
-                        "text-label text-muted hover:text-primary group inline-flex items-center gap-2",
-                        TRANSITION,
-                      )}
-                    >
-                      <SocialMark
-                        platform={social.platform}
-                        className={cn(
-                          "text-muted group-hover:text-primary size-5 shrink-0",
-                          TRANSITION,
-                        )}
-                      />
-                      {social.name}
-                      <span className="sr-only">(opens in a new tab)</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
+      {isClient ? createPortal(panel, document.body) : null}
+    </>
   );
 }

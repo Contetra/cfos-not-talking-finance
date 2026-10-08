@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 
 import homeStyles from "./components/home/home.module.css";
 import HomeAbout from "./components/home/HomeAbout";
+import HomeFeatured from "./components/home/HomeFeatured";
 import HomeHero from "./components/home/HomeHero";
 import HomeHost from "./components/home/HomeHost";
 import HomeProcess from "./components/home/HomeProcess";
 import HomeTeam from "./components/home/HomeTeam";
+import LatestBlogs from "@/components/LatestBlogs";
 import { routes, site } from "@/data/site";
 import { host } from "@/data/team";
-import { cn } from "@/lib/cn";
-import { handwriting, heroDisplay, homeRoboto } from "@/lib/homeFonts";
 
 export const metadata: Metadata = {
   // Uses the layout's title template: "… — CFOs Not Talking Finance".
@@ -66,21 +66,16 @@ export default function HomePage() {
         }}
       />
 
-      {/* The landing design, top to bottom. Its fonts are scoped to this
-          wrapper, so they load on "/" only. */}
-      <div
-        className={cn(
-          homeStyles.page,
-          handwriting.variable,
-          heroDisplay.variable,
-          homeRoboto.variable,
-        )}
-      >
+      {/* The landing design, top to bottom. Its faces are loaded in the root
+          layout, since the header, page heroes and footer use them too. */}
+      <div className={homeStyles.page}>
         <HomeHero />
         <HomeProcess />
         <HomeHost />
         <HomeAbout />
+        <HomeFeatured />
         <HomeTeam />
+        <LatestBlogs />
       </div>
     </>
   );

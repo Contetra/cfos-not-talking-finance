@@ -18,6 +18,9 @@ export const host: Host = {
     "So I started asking. Not about EBITDA or working capital, but about the town someone grew up in, the exam they failed, the job they took because they needed the money, the one thing a mentor said that they still repeat twenty years later.",
     "What comes back is more useful to a young chartered accountant than any technical session I could put together. That is the whole reason this show exists.",
   ],
+  about:
+    "CA Chitra Parameswaran hosts CFOs Not Talking Finance, a show about the people behind the finance title. Her guests talk about where they grew up, the exams they failed and the mentors who shaped them, not EBITDA or working capital.",
+  linkedin: "https://www.linkedin.com/in/chitra-parameswaran/",
 };
 
 export const credits: CreditLine[] = [
