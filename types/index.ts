@@ -138,6 +138,11 @@ export type Host = {
   image: string;
   /** Paragraphs, in her own register. */
   paragraphs: string[];
+  /** Two sentences, third person: the "About Host" block on episode and blog
+   *  pages. */
+  about: string;
+  /** Where "Say Hello!" and the episode credits point. */
+  linkedin: string;
 };
 
 export type GalleryItem = {
@@ -194,4 +199,102 @@ export type HomeTeamGroup = {
   /** Handwritten label above the group. */
   label: string;
   members: HomeTeamMember[];
+};
+
+/* -------------------------------------------------------------------------
+   Listening platforms
+------------------------------------------------------------------------- */
+
+export type ListenPlatform = "spotify" | "youtube" | "jiosaavn" | "apple-podcasts";
+
+/** One place to hear the show. A platform with no `url` yet is skipped
+ *  everywhere it would appear, rather than rendered as a dead link. */
+export type ListenLink = {
+  platform: ListenPlatform;
+  name: string;
+  url: string | null;
+};
+
+/* -------------------------------------------------------------------------
+   Guest episode pages and blog posts
+
+   Both are templates: one data file per guest renders a full page. See
+   data/episodes/_template.ts and data/blogs/_template.ts.
+------------------------------------------------------------------------- */
+
+/** One run of an article: an optional heading and its paragraphs. The first
+ *  section usually has no heading — it is the introduction. */
+export type ArticleSection = {
+  heading?: string;
+  paragraphs: string[];
+};
+
+export type Person = {
+  /** As it should be printed, with any prefix: "CA Vinit Bandi". */
+  name: string;
+  /** "CFO at The Whole Truth". */
+  role: string;
+  linkedin?: string;
+};
+
+/** A guest's own page, at /{slug}. Built to be shared by the guest. */
+export type Episode = {
+  /** The page's address: /{slug}. Lowercase and hyphenated. Must be unique
+   *  and must not clash with a site route (podcast, blogs, join-us…) — the
+   *  episode index checks both and fails loudly if it does. */
+  slug: string;
+  /** Browser tab and search result title, used exactly as written. */
+  pageTitle: string;
+  /** Meta description and link preview text. Aim for ~150 characters. */
+  description: string;
+  guest: Person;
+  /** The YouTube video id: the part after `youtu.be/` or `watch?v=`. */
+  youtubeId: string;
+  /** The video's title on YouTube. Read out on the play button. */
+  videoTitle: string;
+  /** Optional. Defaults to the video's own YouTube thumbnail. */
+  thumbnail?: string;
+  /** ISO date the episode went live. Orders every list, newest first. */
+  publishedAt: string;
+  /** Last crumb in the page hero. */
+  crumb: string;
+  /** The card on the Podcast page. */
+  card: { title: string; excerpt: string };
+  /** `false` keeps the page live and shareable but leaves it off the Podcast
+   *  page grid. Defaults to true. */
+  listed?: boolean;
+  /** In the homepage's "Featured Episodes" row (the newest three). */
+  featured?: boolean;
+  /** Episode-specific links. A platform left out falls back to the show's
+   *  own link in data/site.ts. */
+  listen?: Partial<Record<ListenPlatform, string>>;
+  body: ArticleSection[];
+};
+
+/** A blog post, at /blogs/{slug}. */
+export type BlogPost = {
+  /** The post's address: /blogs/{slug}. Lowercase and hyphenated. */
+  slug: string;
+  /** Browser tab title. " — CFOs Not Talking Finance" is appended. */
+  pageTitle: string;
+  description: string;
+  /** Beside the video: the first line is set in orange, the second in navy. */
+  heading: [string, string];
+  /** Last crumb in the page hero. */
+  crumb: string;
+  /** The card on the Blog page and in "Recent Posts". */
+  card: { title: string; excerpt: string };
+  /** Card and carousel image. Defaults to the video's YouTube thumbnail. A
+   *  post with no video must set this. */
+  cover?: string;
+  guest: Person;
+  /** Optional: a post without a video shows its cover image instead. */
+  youtubeId?: string;
+  videoTitle?: string;
+  /** ISO date. Orders every list, newest first. */
+  publishedAt: string;
+  /** The matching guest page, if there is one. */
+  episodeSlug?: string;
+  listen?: Partial<Record<ListenPlatform, string>>;
+  body: ArticleSection[];
 };

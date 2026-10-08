@@ -15,22 +15,8 @@
  */
 
 .page {
-  /* Sampled from the design render, not the CMYK values in the file. */
-  --hp-navy: #221860;
-  --hp-indigo: #3c2b99;
-  --hp-orange: #f79d00;
-  --hp-orange-hover: #ffb02e;
-  --hp-yellow: #fdc900;
-
-  /* The design's own faces where the visitor has them, close stand-ins
-     where they do not. */
-  --hp-font-sans: Tahoma, Verdana, "Segoe UI", system-ui, sans-serif;
-  --hp-font-hand: var(--font-hand), "Segoe Print", "Comic Sans MS", cursive;
-  --hp-font-hero: var(--font-hero), "Arial Black", Impact, sans-serif;
-  --hp-font-corbel: Corbel, "Segoe UI", system-ui, sans-serif;
-  --hp-font-ui: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-  --hp-font-roboto: var(--font-roboto), Roboto, Arial, sans-serif;
-
+  /* The palette (--hp-*) and font stacks live on :root in globals.css, so the
+     page shells and episode templates share them. */
   background: #fff;
   color: var(--hp-navy);
   font-family: var(--hp-font-sans);

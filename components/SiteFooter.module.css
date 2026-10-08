@@ -1,0 +1,152 @@
+/*
+ * "Listen to us on". Measured from the Podcast design's footer band, in design
+ * pixels of the 1440 frame (--u).
+ */
+
+.footer {
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+  margin-top: calc(72 * var(--u));
+}
+
+.band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: calc(54 * var(--u)) 0 calc(28 * var(--u));
+  background: var(--hp-navy);
+  border-radius: calc(60 * var(--u)) calc(60 * var(--u)) 0 0;
+}
+
+.pattern {
+  --pattern-color: rgb(255 255 255 / 0.045);
+}
+
+.swoosh {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(1440 * var(--u));
+  height: calc(240 * var(--u));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  width: calc(1440 * var(--u));
+  margin-inline: auto;
+  padding: 0 calc(120 * var(--u)) 0 calc(207 * var(--u));
+}
+
+.rule {
+  display: block;
+  width: calc(85 * var(--u));
+  height: max(2px, calc(3 * var(--u)));
+  margin-bottom: calc(14 * var(--u));
+  background: #fff;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(16 * var(--u)) calc(48 * var(--u));
+}
+
+.title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--hp-font-hero);
+  font-weight: 900;
+  font-size: max(24px, calc(48 * var(--u)));
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(14 * var(--u)) calc(40 * var(--u));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  color: #fff;
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: max(16px, calc(26 * var(--u)));
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.platform:hover {
+  color: var(--hp-yellow);
+}
+
+.platform:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.mark {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+.legal {
+  margin: calc(34 * var(--u)) 0 0;
+  color: rgb(255 255 255 / 0.62);
+  font-family: var(--hp-font-roboto);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@media (max-width: 767.98px) {
+  .footer {
+    margin-top: 48px;
+  }
+
+  .band {
+    padding: 32px 0 22px;
+    border-radius: 28px 28px 0 0;
+  }
+
+  .inner {
+    width: auto;
+    padding: 0 22px;
+  }
+
+  .rule {
+    width: 48px;
+    margin-bottom: 10px;
+  }
+
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .platforms {
+    gap: 14px 24px;
+  }
+
+  .legal {
+    margin-top: 26px;
+  }
+
+  .swoosh {
+    display: none;
+  }
+}

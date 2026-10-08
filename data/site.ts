@@ -1,4 +1,4 @@
-import type { AboutCopy, SiteConfig } from "@/types";
+import type { AboutCopy, ListenLink, SiteConfig } from "@/types";
 
 /**
  * Every route on the site, in one place.
@@ -8,11 +8,20 @@ import type { AboutCopy, SiteConfig } from "@/types";
  */
 export const routes = {
   home: "/",
-  specialGuests: "/special-guests",
+  podcast: "/podcast",
   joinUs: "/join-us",
   blogs: "/blogs",
   contactUs: "/contact-us",
 } as const;
+
+/** A guest's own page sits at the root, so it reads well when shared:
+ *  cfosnottalkingfinance.com/ca-vinit-bandi */
+export const episodePath = (slug: string) => `/${slug}`;
+
+export const blogPath = (slug: string) => `${routes.blogs}/${slug}`;
+
+/** First crumb on every inner page. */
+export const CRUMB_ROOT = "CFOs not Talking Finance";
 
 /**
  * Stand-in for any image not yet supplied: a neutral tone in the surface
@@ -32,9 +41,8 @@ export const site: SiteConfig = {
   description:
     "Senior finance leaders talk about their upbringing, their education, the turns their careers took and the advice they would give someone starting out. No number crunching. Produced by Contetra Private Limited.",
   producer: "Contetra Private Limited",
-  // TODO(asset): replace with the production domain before launch — metadataBase
-  // and the JSON-LD `url` both read from here.
-  url: "https://www.contetra.com",
+  // metadataBase, canonical URLs, the sitemap and the JSON-LD all read from here.
+  url: "https://www.cfosnottalkingfinance.com",
   logo: "https://contetra.b-cdn.net/CFO%20Podcast/Podcast%20logo%20Invers.png",
   logoInverse:
     "https://contetra.b-cdn.net/CFO%20Podcast/Podcast%20logo%20Inverted%20-%20CFO%20not%20talking%20Finnace.png",
@@ -42,20 +50,11 @@ export const site: SiteConfig = {
   ogImage:
     "https://contetra.b-cdn.net/CFO%20Podcast/Podcast%20logo%20Invers.png",
 
+  // "Be Our Guest" is the button beside these, not an item: see `joinCta`.
   nav: [
     { label: "Home", href: routes.home },
-    {
-      label: "Special guests",
-      href: routes.specialGuests,
-      comingSoon: true,
-    },
-    { label: "Join us", href: routes.joinUs },
-    { label: "Blogs", href: routes.blogs, comingSoon: true },
-    {
-      label: "Contact us",
-      href: routes.contactUs,
-      comingSoon: true,
-    },
+    { label: "Podcast", href: routes.podcast },
+    { label: "Blog", href: routes.blogs },
   ],
 
   socials: [
@@ -96,6 +95,54 @@ export const site: SiteConfig = {
  * left edge, with the middle line set smaller and a step lighter. The hero
  * re-sets these at display size — words here, sizing in the component.
  */
+/**
+ * Where to listen, in display order: the footer, the episode sidebar and the
+ * "Watch & listen on" row of a blog post all read this list.
+ *
+ * TODO(link): JioSaavn and Apple Podcasts show URLs. Until a `url` is set the
+ * platform is simply left out, never shown as a dead link.
+ */
+const socialUrl = (platform: "spotify" | "youtube") =>
+  site.socials.find((s) => s.platform === platform)?.url ?? null;
+
+export const listenLinks: ListenLink[] = [
+  { platform: "spotify", name: "Spotify", url: socialUrl("spotify") },
+  { platform: "youtube", name: "YouTube", url: socialUrl("youtube") },
+  { platform: "jiosaavn", name: "JioSaavn", url: null },
+  { platform: "apple-podcasts", name: "Apple Podcasts", url: null },
+];
+
+/** The listening card at the top of an episode page's sidebar. */
+export const listenWidget = {
+  title: { lead: "CFOs", accent: "Unfiltered" },
+  byline: "with Chitra Parameswaran",
+  reviewPrompt: "Enjoying the podcast? Do your good deed for the day and",
+  reviewLabel: "leave your 5-star review",
+  /** Apple Podcasts is where reviews are written; Spotify takes star ratings
+   *  until the Apple link exists. */
+  reviewPlatforms: ["apple-podcasts", "spotify"] as const,
+};
+
+/** Copy for the Podcast and Blog listing pages. */
+export const podcastPage = {
+  title: "Featured Episodes",
+  crumb: "Podcast",
+  description:
+    "Every conversation on CFOs Not Talking Finance: finance leaders on where they grew up, the exams they failed and the turns their careers took.",
+  empty: "The first episodes are on their way.",
+};
+
+export const blogPage = {
+  title: "Blog",
+  crumb: "Blog",
+  description:
+    "Notes from every conversation on CFOs Not Talking Finance: the stories, the lessons and the things that did not make the edit.",
+  empty: "The first posts are on their way.",
+  /** "Checkout" in the design is the noun; the phrase is two words. */
+  latestTitle: "Check Out Our Latest Blog",
+  recentTitle: "Recent Posts",
+};
+
 export const wordmark = {
   line1: "CFOs",
   line2: "Not talking",
@@ -117,7 +164,7 @@ export const about: AboutCopy = {
 /** The home page's primary conversion. */
 export const joinCta = {
   line: "We record in Mumbai, or remotely if that is easier.",
-  button: "Be our next guest",
+  button: "Be Our Guest",
   href: routes.joinUs,
 };
 
@@ -148,16 +195,8 @@ export const joinPage = {
     "That did not send. Check your connection and try again, or email us directly.",
 };
 
-/** Copy for the three placeholder routes. One line each, specific to the page. */
+/** Copy for the placeholder route. One line, specific to the page. */
 export const comingSoonCopy = {
-  "special-guests": {
-    title: "Special guests",
-    line: "Every conversation, with the people who had them.",
-  },
-  blogs: {
-    title: "Blogs",
-    line: "Notes, transcripts and the things that did not make the edit.",
-  },
   "contact-us": {
     title: "Contact us",
     line: "The direct line to the team.",

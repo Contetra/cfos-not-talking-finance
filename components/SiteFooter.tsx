@@ -1,101 +1,57 @@
-import Image from "next/image";
-import Link from "next/link";
-
-import { routes, site } from "@/data/site";
+import { Swoosh } from "@/app/components/home/decor";
+import shared from "@/app/components/home/home.module.css";
+import { site } from "@/data/site";
 import { cn } from "@/lib/cn";
-import { CONTAINER, TRANSITION } from "@/lib/ui";
-import { SocialMark } from "./SocialMarks";
+import { resolveListenLinks } from "@/lib/media";
+import styles from "./SiteFooter.module.css";
+import { ListenMark } from "./SocialMarks";
 
 /**
- * Light footer on surface, with a 2px accent rule along the top edge.
- * The year is computed at render — never hardcoded.
+ * The redesign's footer, the same on every page: a navy band with "Listen to
+ * us on" and the platforms. Platforms without a URL in data/site.ts are left
+ * out until one is added. The year is computed at render, never hardcoded.
  */
 export default function SiteFooter() {
+  const links = resolveListenLinks();
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-surface border-accent border-t-2">
-      <div className={cn(CONTAINER, "py-16 md:py-20")}>
-        <div className="grid grid-cols-12 gap-x-8 gap-y-12">
-          <div className="col-span-12 lg:col-span-5">
-            <Link href={routes.home} className="inline-block">
-              <Image
-                src={site.logo}
-                alt={site.name}
-                width={43}
-                height={40}
-                className="h-10 w-auto"
-              />
-            </Link>
-            <p className="font-body text-copy text-body mt-5 max-w-[34ch] text-pretty">
-              {site.blurb}
-            </p>
-          </div>
+    <footer className={styles.footer}>
+      <div className={styles.band}>
+        <span aria-hidden="true" className={cn(shared.pattern, styles.pattern)} />
+        <Swoosh
+          id="swoosh-footer"
+          className={styles.swoosh}
+          viewBox="0 0 1440 240"
+          paths={["M-30 40C60 10 150 60 170 130C190 205 120 250 60 214C10 184 40 110 120 104"]}
+          from={[120, 104]}
+          to={[-30, 40]}
+          color="#f79d00"
+          opacity={0.42}
+        />
 
-          <nav
-            aria-label="Footer"
-            className="col-span-6 lg:col-span-3 lg:col-start-7"
-          >
-            <ul className="space-y-3">
-              {site.nav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "font-body text-label text-body hover:text-primary",
-                      TRANSITION,
-                    )}
-                  >
-                    {item.label}
-                    {item.comingSoon ? (
-                      <>
-                        <span
-                          aria-hidden="true"
-                          className="bg-accent ml-2 inline-block size-[5px] rounded-full align-middle"
-                        />
-                        <span className="sr-only"> (coming soon)</span>
-                      </>
-                    ) : null}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="col-span-6 lg:col-span-3">
-            <ul className="space-y-3">
-              {site.socials.map((social) => (
-                <li key={social.platform}>
+        <div className={styles.inner}>
+          <span aria-hidden="true" className={styles.rule} />
+          <div className={styles.row}>
+            <h2 className={styles.title}>Listen to us on</h2>
+            <ul className={styles.platforms}>
+              {links.map((link) => (
+                <li key={link.platform}>
                   <a
-                    href={social.url}
+                    href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={cn(
-                      "font-body text-label text-body hover:text-primary group inline-flex items-center gap-2.5",
-                      TRANSITION,
-                    )}
+                    className={styles.platform}
                   >
-                    <SocialMark
-                      platform={social.platform}
-                      className={cn(
-                        "text-muted group-hover:text-primary size-[18px] shrink-0",
-                        TRANSITION,
-                      )}
-                    />
-                    <span>
-                      {social.name}
-                      <span className="text-muted"> @{social.handle}</span>
-                    </span>
-                    <span className="sr-only">(opens in a new tab)</span>
+                    <ListenMark platform={link.platform} className={styles.mark} />
+                    {link.name}
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
-
-        <div className="border-line mt-14 border-t pt-6">
-          <p className="font-body text-muted max-w-[64ch] text-[13px] text-pretty">
+          <p className={styles.legal}>
             © {year} {site.producer}. All rights reserved.
           </p>
         </div>

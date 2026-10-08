@@ -107,13 +107,10 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -127,6 +124,44 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ---------------------------------------------------------------------------
+   The landing design's palette and faces.
+
+   Shared by the homepage modules and every page shell: the header that sits on
+   each hero, the page hero, the footer, and the episode and blog templates.
+   Sampled from the design render, not the CMYK values in the file.
+
+   NOTE: the shadcn block below used to remap --color-primary, --color-accent
+   and --color-muted to its own greys, which turned every accent button light
+   grey and every muted caption near-white. Those three lines are gone; the
+   brand values in the first @theme block apply again.
+--------------------------------------------------------------------------- */
+
+:root {
+  --hp-navy: #221860;
+  --hp-indigo: #3c2b99;
+  --hp-orange: #f79d00;
+  --hp-orange-hover: #ffb02e;
+  /* #f79d00 is 2.2:1 on white: fine for fills and display type, never for
+     small text. This darker amber clears 4.5:1 for links and captions. */
+  --hp-orange-text: #b45f00;
+  --hp-yellow: #fdc900;
+  /* Article and card text, and the hairlines and chips around them. */
+  --hp-ink: #1f1d2b;
+  --hp-grey: #55526a;
+  --hp-hairline: #e6e4ee;
+  --hp-chip: #f2f1f6;
+
+  /* The design's own faces where the visitor has them, close stand-ins where
+     they do not. The --font-* variables are set on <html> by next/font. */
+  --hp-font-sans: Tahoma, Verdana, "Segoe UI", system-ui, sans-serif;
+  --hp-font-hand: var(--font-hand), "Segoe Print", "Comic Sans MS", cursive;
+  --hp-font-hero: var(--font-hero), "Arial Black", Impact, sans-serif;
+  --hp-font-corbel: Corbel, "Segoe UI", system-ui, sans-serif;
+  --hp-font-ui: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --hp-font-roboto: var(--font-roboto), Roboto, Arial, sans-serif;
 }
 
 /* ---------------------------------------------------------------------------

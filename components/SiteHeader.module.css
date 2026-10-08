@@ -1,0 +1,174 @@
+/*
+ * The header laid over each page's navy hero. It shares the heroes' measuring
+ * system: --u is one design pixel of the 1440-wide frame, and every hero card
+ * starts 12px below the top of the page (--hero-gap), so positions here are
+ * written as (design y - card top), exactly as in HomeHero.module.css.
+ */
+
+.header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 30;
+  container-type: inline-size;
+  --u: min(1px, 100cqw / 1440);
+  --hero-gap: 12px;
+  /* The bar is mostly empty space over the hero; only its controls take
+     clicks. */
+  pointer-events: none;
+}
+
+.bar {
+  position: relative;
+  width: calc(1440 * var(--u));
+  margin-inline: auto;
+}
+
+.logoLink,
+.cluster {
+  pointer-events: auto;
+}
+
+.logoLink {
+  position: absolute;
+  left: calc(76 * var(--u));
+  top: calc(var(--hero-gap) + 38 * var(--u));
+  display: block;
+  width: calc(180 * var(--u));
+  border-radius: 8px;
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Nav, sound, button and menu trigger, centred on the line the design's
+   button sits on (y 78-125 from the card's top). */
+.cluster {
+  position: absolute;
+  right: calc(71 * var(--u));
+  top: calc(var(--hero-gap) + 78 * var(--u));
+  height: max(40px, calc(47 * var(--u)));
+  display: flex;
+  align-items: center;
+  gap: max(12px, calc(22 * var(--u)));
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: max(18px, calc(34 * var(--u)));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  position: relative;
+  display: inline-block;
+  padding-block: 4px;
+  color: #fff;
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: max(15px, calc(25 * var(--u)));
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--hp-yellow);
+}
+
+/* The current page carries a short amber rule, which the design does not
+   draw but the visitor needs. */
+.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--hp-orange);
+}
+
+.link:focus-visible,
+.cta:focus-visible,
+.logoLink:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.sound {
+  color: #fff;
+}
+
+.sound:hover,
+.sound:focus-visible {
+  color: var(--hp-navy);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 max(18px, calc(36 * var(--u)));
+  border-radius: 9999px;
+  background: var(--hp-orange);
+  color: var(--hp-navy);
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: max(15px, calc(25 * var(--u)));
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.cta:hover {
+  background: var(--hp-orange-hover);
+}
+
+.menuTrigger {
+  display: none;
+}
+
+/* --- Below desktop: logo, sound, button and the menu. ------------------- */
+
+@media (max-width: 1023.98px) {
+  .logoLink {
+    left: 18px;
+    top: calc(var(--hero-gap) + 14px);
+    width: 84px;
+  }
+
+  .cluster {
+    right: 14px;
+    top: calc(var(--hero-gap) + 18px);
+    height: 40px;
+    gap: 8px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .cta {
+    padding: 0 18px;
+    font-size: 15px;
+  }
+
+  .menuTrigger {
+    display: inline-flex;
+  }
+}
+
+/* Phones: the button moves into the menu. */
+@media (max-width: 639.98px) {
+  .cta {
+    display: none;
+  }
+}

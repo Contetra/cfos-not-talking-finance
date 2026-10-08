@@ -1,0 +1,51 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+
+.label {
+  margin: 0;
+  color: var(--hp-navy);
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.icons {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  color: var(--hp-navy);
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.icon:hover {
+  background: var(--hp-chip);
+  color: var(--hp-indigo);
+}
+
+.icon:focus-visible {
+  outline: 2px solid var(--hp-orange);
+  outline-offset: 2px;
+}
+
+.mark {
+  width: 32px;
+  height: 32px;
+}

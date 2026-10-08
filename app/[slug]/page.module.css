@@ -1,0 +1,60 @@
+/* Video and write-up on the left, the listening card and recent posts on the
+   right, as the episode design lays them out. */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 56px;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 56px 32px 0;
+}
+
+.article {
+  margin-top: 30px;
+}
+
+.credits {
+  display: grid;
+  gap: 16px;
+  margin: 36px 0 0;
+  padding-top: 26px;
+  border-top: 1px solid var(--hp-hairline);
+  color: var(--hp-ink);
+  font-family: var(--hp-font-roboto);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.credits dt {
+  font-weight: 700;
+}
+
+.credits dd {
+  margin: 2px 0 0;
+}
+
+.credits a {
+  color: var(--hp-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.credits a:hover {
+  color: var(--hp-orange-text);
+}
+
+.aside {
+  display: grid;
+  gap: 28px;
+}
+
+@media (max-width: 1023.98px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: 36px 22px 0;
+  }
+}

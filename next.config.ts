@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
         hostname: "contetra.b-cdn.net",
         pathname: "/**",
       },
+      // Episode thumbnails: the YouTube "eyeframe" and every episode card.
+      {
+        protocol: "https",
+        hostname: "i.ytimg.com",
+        pathname: "/vi/**",
+      },
     ],
 
     // Next 16 defaults images.qualities to [75]; anything else is coerced to
@@ -22,6 +28,13 @@ const nextConfig: NextConfig = {
     //
     // loader: "custom",
     // loaderFile: "./lib/bunnyLoader.ts",
+  },
+
+  async redirects() {
+    return [
+      // The guest archive was planned as /special-guests; it shipped as /podcast.
+      { source: "/special-guests", destination: "/podcast", permanent: true },
+    ];
   },
 };
 

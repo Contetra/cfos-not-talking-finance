@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 
-import { homeImageSizes, homeTeam } from "@/data/home";
+import { homeImageSizes, homeTeam, homeTeamHeading } from "@/data/home";
 import { cn } from "@/lib/cn";
 import type { HomeTeamGroup } from "@/types";
 import { type ArrowSpec, DottedArrows, Swoosh } from "./decor";
@@ -107,13 +107,45 @@ const LAYOUT: Record<HomeTeamGroup["id"], GroupLayout> = {
   },
 };
 
-/** The people behind the show, as the design groups them. */
+/** The people behind the show, as the design groups them, under the orange
+ *  speech bubble that names them. */
 export default function HomeTeam() {
   return (
     <section className={styles.team} aria-labelledby="team-title">
-      <h2 id="team-title" className="sr-only">
-        The team behind the show
-      </h2>
+      <div className={styles.heading}>
+        <svg
+          className={styles.bubble}
+          viewBox="0 0 650 236"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M325 8C472 4 614 32 637 100C656 158 602 198 522 208L566 232L468 212C420 216 372 218 325 218C168 220 22 198 12 122C2 48 160 12 325 8Z"
+            fill="currentColor"
+          />
+        </svg>
+        <svg
+          className={styles.flourish}
+          viewBox="0 0 760 250"
+          aria-hidden="true"
+          focusable="false"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="5"
+          strokeLinecap="round"
+        >
+          <path d="M40 214C14 190 22 152 58 150C90 148 92 186 66 196" />
+          <path d="M704 40C732 58 730 98 696 104C664 110 656 74 682 62" />
+        </svg>
+        <h2 id="team-title" className={cn(shared.hand, styles.headingText)}>
+          {homeTeamHeading.map((line) => (
+            <span key={line} className={styles.headingLine}>
+              {line}{" "}
+            </span>
+          ))}
+        </h2>
+      </div>
+
       <div className={styles.canvas}>
         <Swoosh
           id="swoosh-team"

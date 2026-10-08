@@ -1,0 +1,88 @@
+/* The blog design: video beside the headline, then the write-up across the
+   full measure of the container. */
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 32px 0;
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 44px;
+}
+
+.cover {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--hp-navy);
+}
+
+.coverImage {
+  object-fit: cover;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--hp-font-hero);
+  font-weight: 900;
+  font-size: clamp(26px, 2.6vw, 36px);
+  line-height: 1.15;
+}
+
+.headingLead {
+  display: block;
+  color: var(--hp-orange);
+}
+
+.headingRest {
+  display: block;
+  color: var(--hp-navy);
+}
+
+.people {
+  margin: 18px 0 22px;
+  color: var(--hp-navy);
+  font-family: var(--hp-font-roboto);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.episodeLink {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--hp-orange-text);
+  font-family: var(--hp-font-roboto);
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.episodeLink:hover {
+  color: var(--hp-navy);
+}
+
+.article {
+  margin-top: 44px;
+}
+
+@media (max-width: 767.98px) {
+  .wrap {
+    padding: 32px 22px 0;
+  }
+
+  .intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .article {
+    margin-top: 32px;
+  }
+}

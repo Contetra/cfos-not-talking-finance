@@ -7,6 +7,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { site } from "@/data/site";
 import { cabinetGrotesk, switzer } from "@/lib/fonts";
+import { handwriting, heroDisplay, homeRoboto } from "@/lib/homeFonts";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -62,12 +63,16 @@ export default function RootLayout({
         "h-full",
         cabinetGrotesk.variable,
         switzer.variable,
+        handwriting.variable,
+        heroDisplay.variable,
+        homeRoboto.variable,
         "font-sans",
         geist.variable,
       )}
     >
       <body className="font-body bg-canvas text-body min-h-full antialiased">
-        <div className="flex min-h-screen flex-col">
+        {/* `relative`: the header is laid over the top of each page's hero. */}
+        <div className="relative flex min-h-screen flex-col">
           <a
             href="#main"
             className="focus:bg-accent focus:text-primary sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:font-medium"

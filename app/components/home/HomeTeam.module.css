@@ -128,3 +128,59 @@
     top: auto;
   }
 }
+
+/* --- "The people behind the conversation." ------------------------------
+   The orange speech bubble over the groups, centred, with a curl of the same
+   orange either side of it. */
+
+.heading {
+  position: relative;
+  width: calc(650 * var(--u));
+  height: calc(236 * var(--u));
+  margin: calc(40 * var(--u)) auto calc(10 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--hp-orange);
+}
+
+.bubble {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.flourish {
+  position: absolute;
+  left: calc(-55 * var(--u));
+  top: calc(-6 * var(--u));
+  width: calc(760 * var(--u));
+  height: calc(250 * var(--u));
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.headingText {
+  position: relative;
+  margin: 0 0 calc(18 * var(--u));
+  color: #fff;
+  font-size: calc(50 * var(--u));
+  line-height: 1.1;
+  text-align: center;
+}
+
+.headingLine {
+  display: block;
+}
+
+@media (max-width: 1023.98px) {
+  .heading {
+    --u: min(0.62px, (100cqw - 40px) / 650);
+    margin-top: 32px;
+  }
+
+  .headingText {
+    font-size: max(24px, calc(50 * var(--u)));
+  }
+}

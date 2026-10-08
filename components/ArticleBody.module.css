@@ -1,0 +1,26 @@
+.article {
+  color: var(--hp-ink);
+  font-family: var(--hp-font-roboto);
+}
+
+.heading {
+  margin: 34px 0 0;
+  color: var(--hp-ink);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.paragraph {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.article > :first-child {
+  margin-top: 0;
+}
+
+.heading + .paragraph {
+  margin-top: 10px;
+}

@@ -1,4 +1,4 @@
-import type { SocialPlatform } from "@/types";
+import type { ListenPlatform, SocialPlatform } from "@/types";
 
 /**
  * Brand marks, drawn here as geometry rather than pulled from an icon pack, so
@@ -109,6 +109,64 @@ export function SocialMark({
           />
           <path d={EARCUP_LEFT} fill="currentColor" />
           <path d={EARCUP_RIGHT} fill="currentColor" />
+        </svg>
+      );
+  }
+}
+
+/**
+ * Marks for the listening platforms. Spotify and YouTube reuse the badges
+ * above; JioSaavn and Apple Podcasts are line-drawn, like the Instagram mark,
+ * so they read on navy and on white without a knockout.
+ */
+export function ListenMark({
+  platform,
+  className,
+}: {
+  platform: ListenPlatform;
+  className?: string;
+}) {
+  const base = {
+    viewBox: "0 0 24 24",
+    className,
+    "aria-hidden": true,
+    focusable: "false",
+  } as const;
+
+  switch (platform) {
+    case "spotify":
+    case "youtube":
+      return <SocialMark platform={platform} className={className} />;
+
+    case "apple-podcasts":
+      // The podcast glyph: two open rings around a microphone head and stem.
+      return (
+        <svg {...base} fill="none">
+          <path
+            d="M6.2 17.2A8.2 8.2 0 1 1 17.8 17.2"
+            stroke="currentColor"
+            strokeWidth={1.9}
+            strokeLinecap="round"
+          />
+          <path
+            d="M8.7 14.4A4.7 4.7 0 1 1 15.3 14.4"
+            stroke="currentColor"
+            strokeWidth={1.9}
+            strokeLinecap="round"
+          />
+          <circle cx="12" cy="10.8" r="2" fill="currentColor" />
+          <rect x="10.8" y="13.6" width="2.4" height="8" rx="1.2" fill="currentColor" />
+        </svg>
+      );
+
+    case "jiosaavn":
+      // A ringed disc holding a single note.
+      return (
+        <svg {...base} fill="none">
+          <circle cx="12" cy="12" r="9.6" stroke="currentColor" strokeWidth={1.9} />
+          <ellipse cx="10.1" cy="15.7" rx="2.3" ry="1.85" fill="currentColor" />
+          <rect x="11.3" y="6.6" width="1.7" height="9.2" rx="0.6" fill="currentColor" />
+          <path d="M12.6 6.6c1.9.3 3.6 1.5 3.8 3.6-1-.9-2.3-1.4-3.8-1.5Z" fill="currentColor" />
         </svg>
       );
   }

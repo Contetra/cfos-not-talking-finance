@@ -1,5 +1,4 @@
 import type { HomeStep, HomeTeamGroup } from "@/types";
-import { routes, site } from "./site";
 
 /**
  * Homepage content, taken from the landing design ("CFOs not talking finance
@@ -11,8 +10,6 @@ import { routes, site } from "./site";
  * is already allowed in next.config.ts.
  */
 
-const spotify = site.socials.find((s) => s.platform === "spotify");
-
 export const homeHero = {
   /** The visual lockup. Screen readers get `site.name` instead. */
   title: {
@@ -22,12 +19,6 @@ export const homeHero = {
     tail: "FINANCE",
   },
   byline: "by Contetra",
-  listen: {
-    label: "listen now",
-    href: spotify?.url ?? routes.home,
-    /** Announced after the label, for screen readers. */
-    context: "on Spotify (opens in a new tab)",
-  },
   microphone: "/home/microphone.png",
 } as const;
 
@@ -80,6 +71,16 @@ export const homeSteps: HomeStep[] = [
     image: "/home/steps/step-5.png",
   },
 ];
+
+/** The row of episode thumbnails under the About section. The episodes come
+ *  from data/episodes/ (those marked `featured`). */
+export const homeFeatured = {
+  title: "Featured Episodes",
+  line: "Open a full episode - summary, takeaways, and transcript.",
+} as const;
+
+/** The orange speech bubble over the team, broken where the design breaks it. */
+export const homeTeamHeading = ["The people behind", "the conversation."] as const;
 
 export const homeHost = {
   label: "Our Host",
