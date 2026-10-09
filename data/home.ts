@@ -13,7 +13,7 @@ import type { HomeStep, HomeTeamGroup } from "@/types";
 export const homeHero = {
   /** The visual lockup. Screen readers get `site.name` instead. */
   title: {
-    lead: "CFO’S",
+    lead: "CFOs",
     struck: "NOT",
     accent: "TALKING",
     tail: "FINANCE",
