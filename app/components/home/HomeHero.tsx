@@ -8,7 +8,7 @@ import shared from "./home.module.css";
 import styles from "./HomeHero.module.css";
 
 /**
- * The navy title card: the struck-through title and the studio microphone
+ * The navy title card: the title and the studio microphone
  * standing in front of it. The logo and the navigation are laid over the
  * card's top edge by the site header (components/SiteHeader.tsx).
  *

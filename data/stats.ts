@@ -11,12 +11,12 @@ import { site } from "./site";
  * not worth a runtime dependency yet.
  */
 export const stats: Stats = {
-  lastUpdated: "2026-09-13",
+  lastUpdated: "2026-10-09",
   items: [
     {
       id: "episodes",
       mark: "episodes",
-      value: 24,
+      value: 45,
       label: "episodes published",
       weight: "primary",
     },

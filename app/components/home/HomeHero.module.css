@@ -79,20 +79,11 @@
   display: inline-block;
 }
 
-/* The orange rule through "NOT" (x 780, y 407-415 in the design). */
-.struck::after {
-  content: "";
-  position: absolute;
-  left: 0.028em;
-  right: -0.02em;
-  top: 0.485em;
-  height: 0.065em;
-  background: var(--hp-orange);
-}
-
 .mic {
   position: absolute;
-  left: 5.169em;
+  /* Just clear of "FINANCE", which ends at 5.557em; the head is opaque to
+     the image's left edge, so this leaves a ~0.1em gap. */
+  left: 5.66em;
   top: 0.403em;
   width: 1.068em;
   max-width: none;
@@ -161,6 +152,9 @@
     top: auto;
     align-self: center;
     margin-top: 0;
+    /* Reserve the microphone's overhang (5.66em + 1.068em - 5.557em) so the
+       title and mic are centred as one and the mic stays on the card. */
+    margin-right: 1.17em;
     font-size: calc(56 * var(--u));
   }
 
